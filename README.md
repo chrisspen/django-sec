@@ -15,7 +15,7 @@ Installation
 
 Install the package using pip via:
 
-    pip install https://github.com/chrisspen/django-sec/archive/master.zip
+    pip install https://github.com/lilott8/django-sec/archive/master.zip
 
 then add `django_sec` to your `INSTALLED_APPS` and run:
 

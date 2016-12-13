@@ -60,7 +60,7 @@ class Migration(migrations.Migration):
                 ('filename', models.CharField(db_index=True, help_text='The name of the associated financial filing.', max_length=100)),
                 ('year', models.IntegerField(db_index=True)),
                 ('quarter', models.IntegerField(db_index=True)),
-                ('_ticker', models.CharField(blank=True, db_column=b'ticker', db_index=True, help_text='Caches the trading symbol if one is detected in the\n            filing during attribute load.', max_length=50, null=True, verbose_name='ticker')),
+                ('_ticker', models.CharField(blank=True, db_column='ticker', db_index=True, help_text='Caches the trading symbol if one is detected in the\n            filing during attribute load.', max_length=50, null=True, verbose_name='ticker')),
                 ('attributes_loaded', models.BooleanField(db_index=True, default=False)),
                 ('valid', models.BooleanField(db_index=True, default=True, help_text='If false, errors were encountered trying to parse the associated files.')),
                 ('error', models.TextField(blank=True, null=True)),

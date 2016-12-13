@@ -113,7 +113,7 @@ class Command(BaseCommand):
         if not os.path.exists(fn):
             print('Downloading %s.' % (url,))
 
-            ftp = FTP('ftp.sec.gov')
+            ftp = FTP('ftp.sec.gov', user="anonymous", passwd="anonymous")
 
             ftp.retrbinary('RETR %s' % path, open(fn, 'wb').write)
             #urllib.request.urlop

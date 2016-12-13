@@ -4,6 +4,7 @@ import urllib.request
 from contextlib import closing
 import shutil
 import os
+import ftplib
 import sys
 from zipfile import ZipFile
 from datetime import date, datetime, timedelta
@@ -27,7 +28,9 @@ class Command(BaseCommand):
         parser.add_argument('--quarter', default=None, dest='quarter', action='store')
         parser.add_argument('--delete-prior-indexes', action='store_true', default=False, dest='delete_prior_indexes')
         parser.add_argument('--reprocess', action='store_true', default=False, dest='reprocess')
-        parser.add_argument('--auto-reprocess-last-n-days', help='The number of days to automatically redownload and reprocess index files.', default=90, dest='auto_reprocess_last_n_days', action='store')
+        parser.add_argument('--auto-reprocess-last-n-days',
+                            help='The number of days to automatically redownload and reprocess index files.',
+                            default=90, dest='auto_reprocess_last_n_days', action='store')
 
     #args = ''
     """
@@ -105,12 +108,14 @@ class Command(BaseCommand):
         if os.path.exists(fn) and reprocess:
             print('Deleting old file %s.' % fn)
             os.remove(fn)
-        
+
         if not os.path.exists(fn):
             print('Downloading %s.' % (url,))
-            with closing(urllib.request.urlopen(url)) as ftp:
-                with open(fn, 'wb') as f:
-                    shutil.copyfileobj(ftp, f)
+            ftp.retrbinary('RETR %s' % url, open(fn, 'wb').write)
+            #urllib.request.urlop
+            #with closing(urllib.request.urlopen(url)) as ftp:
+            #    with open(fn, 'w') as f:
+            #        shutil.copyfileobj(ftp, f)
             ifile.downloaded = timezone.now()
         
         if not ifile.downloaded:

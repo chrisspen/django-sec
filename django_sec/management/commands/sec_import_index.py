@@ -25,12 +25,12 @@ class Command(BaseCommand):
     help = "Download new files representing one month of 990s, ignoring months we already have. "\
         "Each quarter contains hundreds of thousands of filings; will take a while to run. "
     def add_arguments(self, parser):
-        parser.add_argument('start_year', type=int, default=None)
-        parser.add_argument('end_year', type=int, default=None)
-        parser.add_argument('quarter', type=int, default=None)
-        parser.add_argument('delete-prior-indexes', type=bool, action='store_true', default=False)
-        parser.add_argument('reprocess', type=bool, action='store_true', default=False)
-        parser.add_argument('auto-reprocess-last-n-days', type=int, help='The number of days to automatically redownload and reprocess index files.', default=90)
+        parser.add_argument('start_year', default=None, dest='start_year')
+        parser.add_argument('end_year', default=None, dest='end_year')
+        parser.add_argument('quarter', default=None, dest='quarter')
+        parser.add_argument('delete-prior-indexes', action='store_true', default=False, dest='delete_prior_indexes')
+        parser.add_argument('reprocess', action='store_true', default=False, dest='reprocess')
+        parser.add_argument('auto-reprocess-last-n-days', type=int, help='The number of days to automatically redownload and reprocess index files.', default=90, dest='auto_reprocess_last_n_days')
 
     #args = ''
     """

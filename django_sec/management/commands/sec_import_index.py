@@ -109,20 +109,8 @@ class Command(BaseCommand):
         if not os.path.exists(fn):
             print('Downloading %s.' % (url,))
             with closing(urllib.request.urlopen(url)) as ftp:
-                with open(fn, 'w') as f:
-                    shutil.copyfileobj(ftp, fn)
-
-
-            #try:
-            #    http = urllib3.PoolManager()
-            #    compressed_data = http.request('GET', url).read()
-            #    #compressed_data = urllib.urlopen(url).read()
-            #except IOError as e:
-            #    print('Unable to download url: %s' % (e,))
-            #    return
-            #fileout = open(fn,'w')
-            #fileout.write(compressed_data)
-            #fileout.close()
+                with open(fn, 'wb') as f:
+                    shutil.copyfileobj(ftp, f)
             ifile.downloaded = timezone.now()
         
         if not ifile.downloaded:

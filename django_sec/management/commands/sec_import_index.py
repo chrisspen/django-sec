@@ -113,7 +113,8 @@ class Command(BaseCommand):
         if not os.path.exists(fn):
             print('Downloading %s.' % (url,))
 
-            ftp = FTP('ftp.sec.gov', user="anonymous", passwd="anonymous")
+            ftp = FTP('ftp.sec.gov')
+            ftp.login()
 
             ftp.retrbinary('RETR %s' % path, open(fn, 'wb').write)
             #urllib.request.urlop
@@ -125,6 +126,7 @@ class Command(BaseCommand):
         if not ifile.downloaded:
             ifile.downloaded = timezone.now()
         ifile.save()
+        ftp.quit()
         transaction.commit()
         
         # Extract the compressed file

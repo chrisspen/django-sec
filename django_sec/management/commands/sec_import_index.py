@@ -115,7 +115,7 @@ class Command(BaseCommand):
 
             ftp = FTP('ftp.sec.gov')
             ftp.login()
-            ftp.retrbinary('RETR %s' % path, open(fn, 'wb').write)
+            ftp.retrbinary('RETR %s' % path, open(fn, 'w').write)
             #urllib.request.urlop
             #with closing(urllib.request.urlopen(url)) as ftp:
             #    with open(fn, 'wb') as f:
@@ -130,7 +130,7 @@ class Command(BaseCommand):
 
         # Extract the compressed file
         print('Opening index file %s.' % (fn,))
-        zip = ZipFile(fn, 'rb')
+        zip = ZipFile(fn, 'r')
         zdata = zip.read('company.idx')
         print(zdata)
         #zdata = removeNonAscii(zdata)

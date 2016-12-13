@@ -4,7 +4,7 @@ import urllib.request
 from contextlib import closing
 import shutil
 import os
-import ftplib
+from ftplib import ftp
 import sys
 from zipfile import ZipFile
 from datetime import date, datetime, timedelta
@@ -111,7 +111,7 @@ class Command(BaseCommand):
 
         if not os.path.exists(fn):
             print('Downloading %s.' % (url,))
-            ftplib.retrbinary('RETR %s' % url, open(fn, 'wb').write)
+            ftp.retrbinary('RETR %s' % url, open(fn, 'wb').write)
             #urllib.request.urlop
             #with closing(urllib.request.urlopen(url)) as ftp:
             #    with open(fn, 'w') as f:

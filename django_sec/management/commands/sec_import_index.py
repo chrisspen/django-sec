@@ -1,6 +1,8 @@
 from __future__ import print_function
 
-import urllib3
+import urllib.request
+from contextlib import closing
+import shutil
 import os
 import sys
 from zipfile import ZipFile
@@ -106,16 +108,21 @@ class Command(BaseCommand):
         
         if not os.path.exists(fn):
             print('Downloading %s.' % (url,))
-            try:
-                http = urllib3.PoolManager()
-                compressed_data = http.request('GET', url).read()
-                #compressed_data = urllib.urlopen(url).read()
-            except IOError as e:
-                print('Unable to download url: %s' % (e,))
-                return
-            fileout = open(fn,'w')
-            fileout.write(compressed_data)
-            fileout.close()
+            with closing(urllib.request.urlopen(url)) as ftp:
+                with open(fn, 'w') as f:
+                    shutil.copyfileobj(ftp, fn)
+
+
+            #try:
+            #    http = urllib3.PoolManager()
+            #    compressed_data = http.request('GET', url).read()
+            #    #compressed_data = urllib.urlopen(url).read()
+            #except IOError as e:
+            #    print('Unable to download url: %s' % (e,))
+            #    return
+            #fileout = open(fn,'w')
+            #fileout.write(compressed_data)
+            #fileout.close()
             ifile.downloaded = timezone.now()
         
         if not ifile.downloaded:

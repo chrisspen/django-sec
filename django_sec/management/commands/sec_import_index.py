@@ -119,7 +119,7 @@ class Command(BaseCommand):
             #urllib.request.urlop
             with closing(urllib.request.urlopen(url)) as ftp:
                 with open(fn, 'w') as f:
-                    shutil.copyfileobj(ftp, f)
+                    shutil.copyfileobj(ftp, f.decode())
             ifile.downloaded = timezone.now()
             #ftp.quit()
 

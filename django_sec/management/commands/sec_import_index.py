@@ -1,15 +1,10 @@
 from __future__ import print_function
 
-import urllib
+import urllib3
 import os
-import re
 import sys
 from zipfile import ZipFile
-import time
 from datetime import date, datetime, timedelta
-from optparse import make_option
-
-#from django.core.management.base import NoArgsCommand
 from django.core.management.base import BaseCommand
 from django.db import transaction, connection
 from django.conf import settings
@@ -112,11 +107,13 @@ class Command(BaseCommand):
         if not os.path.exists(fn):
             print('Downloading %s.' % (url,))
             try:
-                compressed_data = urllib.urlopen(url).read()
+                http = urllib3.PoolManager()
+                compressed_data = http.request('GET', url).read()
+                #compressed_data = urllib.urlopen(url).read()
             except IOError as e:
                 print('Unable to download url: %s' % (e,))
                 return
-            fileout = file(fn,'w')
+            fileout = open(fn,'w')
             fileout.write(compressed_data)
             fileout.close()
             ifile.downloaded = timezone.now()

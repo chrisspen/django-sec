@@ -93,7 +93,7 @@ class Command(BaseCommand):
         Gets the list of filings and download locations for the given year and quarter.
         """
         url='ftp://ftp.sec.gov/edgar/full-index/%d/QTR%d/company.zip' % (year, quarter)
-        #path = "edgar/full-index/%d/QTR%d/company.zip" % (year, quarter)
+        path = "edgar/full-index/%d/QTR%d/company.zip" % (year, quarter)
     
         # Download the data and save to a file
         if not os.path.isdir(DATA_DIR):
@@ -113,15 +113,14 @@ class Command(BaseCommand):
         if not os.path.exists(fn):
             print('Downloading %s.' % (url,))
 
-            #ftp = FTP('ftp.sec.gov')
-            #ftp.login()
-
-            #ftp.retrbinary('RETR %s' % path, open(fn, 'wb').write)
+            ftp = FTP('ftp.sec.gov')
+            ftp.login()
+            ftp.retrbinary('RETR %s' % path, open(fn, 'wb').write)
             #urllib.request.urlop
-            with closing(urllib.request.urlopen(url)) as ftp:
-                with open(fn, 'w') as f:
-                    shutil.copyfileobj(ftp, f)
-            ifile.downloaded = timezone.now()
+            #with closing(urllib.request.urlopen(url)) as ftp:
+            #    with open(fn, 'wb') as f:
+            #        shutil.copyfileobj(ftp, f)
+            #ifile.downloaded = timezone.now()
         
         if not ifile.downloaded:
             ifile.downloaded = timezone.now()

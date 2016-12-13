@@ -130,7 +130,7 @@ class Command(BaseCommand):
         
         # Extract the compressed file
         print('Opening index file %s.' % (fn,))
-        zip = zipfile.ZipFile(fn, 'rb')
+        zip = ZipFile(fn, 'rb')
         zdata = zip.read('company.idx')
         print(zdata)
         #zdata = removeNonAscii(zdata)

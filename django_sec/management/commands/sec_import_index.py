@@ -132,7 +132,7 @@ class Command(BaseCommand):
         print('Opening index file %s.' % (fn,))
         zip = ZipFile(fn, 'r')
         zdata = zip.read('company.idx')
-        print(zdata)
+        #print(zdata)
         #zdata = removeNonAscii(zdata)
 
         # Parse the fixed-length fields

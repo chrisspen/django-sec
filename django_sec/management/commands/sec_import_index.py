@@ -140,7 +140,7 @@ class Command(BaseCommand):
         bulk_indexes = []
         bulk_commit_freq = 1000
         status_secs = 3
-        lines = zdata.split('\n')
+        lines = zdata.decode().split('\n')
         i = 0
         total = len(lines)
         IndexFile.objects.filter(id=ifile.id).update(total_rows=total)

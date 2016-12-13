@@ -9,8 +9,8 @@ import time
 from datetime import date, datetime, timedelta
 from optparse import make_option
 
-from django.core.management.base import NoArgsCommand
-#from django.core.management.base import BaseCommand
+#from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 from django.db import transaction, connection
 from django.conf import settings
 from django.utils import timezone
@@ -21,10 +21,19 @@ from django_sec.models import Company, Index, IndexFile, DATA_DIR
 def removeNonAscii(s):
     return "".join(i for i in s if ord(i)<128)
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     help = "Download new files representing one month of 990s, ignoring months we already have. "\
         "Each quarter contains hundreds of thousands of filings; will take a while to run. "
+    def add_arguments(self, parser):
+        parser.add_argument('start_year', type=int)
+        parser.add_argument('end_year', type=int)
+        parser.add_argument('quarter', type=int)
+        parser.add_argument('delete-prior-indexes', type=bool)
+        parser.add_argument('reprocess', type=bool)
+        parser.add_argument('auto-reprocess-last-n-days', type=int)
+
     #args = ''
+    """
     option_list = NoArgsCommand.option_list + (
         make_option('--start-year',
             default=None),
@@ -41,9 +50,9 @@ class Command(NoArgsCommand):
         make_option('--auto-reprocess-last-n-days',
             default=90,
             help='The number of days to automatically redownload and reprocess index files.'),
-    )
+    )"""
     
-    def handle_noargs(self, **options):
+    def handle(self, **options):
         
         start_year = options['start_year']
         if start_year:

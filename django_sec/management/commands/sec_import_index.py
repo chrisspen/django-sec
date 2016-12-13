@@ -4,7 +4,7 @@ import urllib.request
 from contextlib import closing
 import shutil
 import os
-from ftplib import ftp
+from ftplib import FTP
 import sys
 from zipfile import ZipFile
 from datetime import date, datetime, timedelta
@@ -93,6 +93,7 @@ class Command(BaseCommand):
         Gets the list of filings and download locations for the given year and quarter.
         """
         url='ftp://ftp.sec.gov/edgar/full-index/%d/QTR%d/company.zip' % (year, quarter)
+        path = "edgar/full-index/%d/QTR%d/company.zip" % (year, quarter)
     
         # Download the data and save to a file
         if not os.path.isdir(DATA_DIR):
@@ -111,7 +112,10 @@ class Command(BaseCommand):
 
         if not os.path.exists(fn):
             print('Downloading %s.' % (url,))
-            ftp.retrbinary('RETR %s' % url, open(fn, 'wb').write)
+
+            ftp = FTP('ftp.sec.gov')
+
+            ftp.retrbinary('RETR %s' % path, open(fn, 'wb').write)
             #urllib.request.urlop
             #with closing(urllib.request.urlopen(url)) as ftp:
             #    with open(fn, 'w') as f:

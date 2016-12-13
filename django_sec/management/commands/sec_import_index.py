@@ -94,18 +94,18 @@ class Command(BaseCommand):
         """
         url='ftp://ftp.sec.gov/edgar/full-index/%d/QTR%d/company.zip' % (year, quarter)
         path = "edgar/full-index/%d/QTR%d/company.zip" % (year, quarter)
-    
+
         # Download the data and save to a file
         if not os.path.isdir(DATA_DIR):
             os.makedirs(DATA_DIR)
         fn = os.path.join(DATA_DIR, 'company_%d_%d.zip' % (year, quarter))
-    
+
         ifile, _ = IndexFile.objects.get_or_create(
             year=year, quarter=quarter, defaults=dict(filename=fn))
         if ifile.processed and not reprocess:
             return
         ifile.filename = fn
-        
+
         if os.path.exists(fn) and reprocess:
             print('Deleting old file %s.' % fn)
             os.remove(fn)
@@ -121,20 +121,20 @@ class Command(BaseCommand):
             #    with open(fn, 'wb') as f:
             #        shutil.copyfileobj(ftp, f)
             #ifile.downloaded = timezone.now()
-        
+            ftp.quit()
+
         if not ifile.downloaded:
             ifile.downloaded = timezone.now()
         ifile.save()
-        ftp.quit()
         transaction.commit()
-        
+
         # Extract the compressed file
         print('Opening index file %s.' % (fn,))
         zip = ZipFile(fn, 'rb')
         zdata = zip.read('company.idx')
         print(zdata)
         #zdata = removeNonAscii(zdata)
-        
+
         # Parse the fixed-length fields
         bulk_companies = []
         bulk_indexes = []
@@ -157,7 +157,7 @@ class Command(BaseCommand):
             if not reprocess and ifile.processed_rows and i < ifile.processed_rows:
                 continue
             if not last_status or ((datetime.now() - last_status).seconds >= status_secs):
-            #if not last_status or not i % 100:
+                #if not last_status or not i % 100:
                 sys.stdout.write('\rProcessing record %i of %i (%.02f%%).' % (i, total, float(i)/total*100))
                 sys.stdout.flush()
                 last_status = datetime.now()
@@ -169,13 +169,13 @@ class Command(BaseCommand):
             if r.strip() == '':
                 continue
             name = r[0:62].strip()
-            
+
             cik = int(r[74:86].strip())
             if cik not in prior_ciks:
                 company_add_count += 1
                 prior_ciks.add(cik)
                 bulk_companies.append(Company(cik=cik, name=force_text(name, errors='replace')))
-                
+
             filename = r[98:].strip()
             key = (cik, dt, filename)#, year, quarter)
             if key in prior_keys:
@@ -199,7 +199,7 @@ class Command(BaseCommand):
                 Index.objects.bulk_create(bulk_indexes)
                 bulk_indexes = []
                 transaction.commit()
-                
+
         if bulk_indexes:
             if len(bulk_companies):
                 Company.objects.bulk_create(bulk_companies)
@@ -207,7 +207,7 @@ class Command(BaseCommand):
             Index.objects.bulk_create(bulk_indexes)
         IndexFile.objects.filter(id=ifile.id).update(processed=timezone.now())
         transaction.commit()
-        
+
         print('\rProcessing record %i of %i (%.02f%%).' % (total, total, 100))
         print()
         print('%i new companies found.' % company_add_count)

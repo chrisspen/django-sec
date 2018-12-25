@@ -19,9 +19,10 @@ Install the package using pip via:
 
     pip install django-sec
 
-then add `django_sec` to your `INSTALLED_APPS` and run:
+add `django_sec` to your `INSTALLED_APPS` and`'CONN_MAX_AGE': 0,` to your default `DATABASES` and run:
 
     python manage.py migrate django_sec
+
 
 Usage
 -----

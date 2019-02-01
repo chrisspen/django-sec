@@ -63,7 +63,7 @@ Currently, this has only been tested to download and extract attributes from
 10-K and 10-Q filings.
 
 The commands support additional parameters and filters, such as to load data
-for specific companies or quarters. Run `python manage help sec_import_index`
+for specific companies or quarters. Run `python manage.py help sec_import_index`
 to see all options.
 
 Development
